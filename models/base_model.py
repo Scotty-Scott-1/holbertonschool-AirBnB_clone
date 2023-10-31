@@ -19,8 +19,8 @@ class BaseModel:
             self.updated_at = datetime.now()
         else:
             self.id = kwargs.get("id", str(uuid.uuid4()))
-            self.created_at = datetime.fromisoformat(kwargs.get("created_at"))
-            self.updated_at = datetime.fromisoformat(kwargs.get("updated_at"))
+            self.created_at = kwargs.get("created_at")
+            self.updated_at = kwargs.get("updated_at")
         storage.new(self)
 
     def __str__(self):
