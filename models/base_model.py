@@ -11,6 +11,7 @@ class BaseModel:
     for other classes"""
 
     def __init__(self, *args, **kwargs):
+        """initializes an instance of BaseModel"""
         if len(kwargs) < 1:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
@@ -21,6 +22,7 @@ class BaseModel:
             self.updated_at = kwargs.get("updated_at")
 
     def __str__(self):
+        """prints a representation od the instance"""
         class_name = self.__class__.__name__
         return ("[{}] ({}) {}".format(class_name, self.id, self.__dict__))
 
