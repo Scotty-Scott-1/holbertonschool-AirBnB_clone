@@ -18,7 +18,7 @@ class BaseModel:
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
         else:
-            self.id = kwargs.get("id", str(uuid.uuid4()))
+            self.id = kwargs.get("id", uuid.uuid4())
             self.created_at = kwargs.get("created_at")
             self.updated_at = kwargs.get("updated_at")
         storage.new(self)
