@@ -4,6 +4,7 @@
 
 import uuid
 from datetime import datetime
+from models.engine.file_storage import storage
 
 
 class BaseModel:
@@ -17,9 +18,10 @@ class BaseModel:
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
         else:
-            self.id = kwargs.get("id", uuid.uuid4())
-            self.created_at = kwargs.get("created_at")
-            self.updated_at = kwargs.get("updated_at")
+            self.id = kwargs.get("id", str(uuid.uuid4()))
+            self.created_at = datetime.fromisoformat(kwargs.get("created_at"))
+            self.updated_at = datetime.fromisoformat(kwargs.get("updated_at"))
+        storage.new(self)
 
     def __str__(self):
         """prints a representation od the instance"""
@@ -31,6 +33,7 @@ class BaseModel:
         current datetime"""
 
         self.updated_at = datetime.now()
+        storage.save()
 
     def to_dict(self):
         """returns a dictionary containing all keys/values of __dict__ of
