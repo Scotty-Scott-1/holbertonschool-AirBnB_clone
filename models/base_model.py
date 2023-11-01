@@ -17,12 +17,11 @@ class BaseModel:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
+            storage.new(self)
         else:
             self.id = kwargs.get("id", str(uuid.uuid4()))
             self.created_at = kwargs.get("created_at")
             self.updated_at = kwargs.get("updated_at")
-        storage.new(self)
-
 
     def __str__(self):
         """prints a representation od the instance"""
@@ -35,7 +34,7 @@ class BaseModel:
 
         self.updated_at = datetime.now()
         storage.save()
-
+        storage.new(self)
 
     def to_dict(self):
         """returns a dictionary containing all keys/values of __dict__ of
@@ -47,8 +46,9 @@ class BaseModel:
         obj_dict['updated_at'] = self.updated_at.isoformat()
         return obj_dict
 
-    @classmethod
+"""    @classmethod
     def from_dict(cls, obj_dict):
         # Create a new instance of the class and initialize it from the dictionary
         instance = cls(**obj_dict)
         return instance
+"""
