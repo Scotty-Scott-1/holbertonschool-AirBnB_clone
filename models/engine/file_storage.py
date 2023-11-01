@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import json
 import os
-from models import models
+
 
 class FileStorage:
     __file_path = "file.json"
@@ -26,8 +26,11 @@ class FileStorage:
             with open(FileStorage.__file_path, 'r') as file:
                 data = json.load(file)
                 for key, value in data.items():
-                    class_name, obj_id = key.split('.')
-                    cls = models[class_name]
-                    instance = cls(**value)
-                    FileStorage.__objects[key] = instance
+                    class_name = value['__class__']
+                    cls = globals().get(class_name)
+                    if cls:
+                        instance = cls(**value)
+                        FileStorage.__objects[key] = instance
+        else:
+            return
 
