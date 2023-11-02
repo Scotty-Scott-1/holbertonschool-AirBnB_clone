@@ -48,16 +48,23 @@ class BaseModel:
 
     @classmethod
     def from_dict(cls, obj_dict):
-        # Create a new instance of the class and initialize it from the dictionary
-        instance = cls()
-        for key, value in obj_dict.items():
-            if key == "id":
-                setattr(instance, key, value)
-            elif key == "created_at":
-                setattr(instance, key, value)
-            elif key == "updated_at":
-                setattr(instance, key, value)
+        """Create a new instance of the class and initialize it from the
+        dictionary"""
+        if '__class__' in obj_dict:
+            class_name = obj_dict['__class__']
+            if class_name == cls.__name__:
+                instance = cls()
+                for key, value in obj_dict.items():
+                    if key == "id":
+                        setattr(instance, key, value)
+                    elif key == "created_at":
+                        setattr(instance, key, datetime.fromisoformat(value))
+                    elif key == "updated_at":
+                        setattr(instance, key, datetime.fromisoformat(value))
+                    elif key != '__class__':
+                        setattr(instance, key, value)
+                return instance
             else:
-                setattr(instance, key, value)
-
-        return instance
+                raise ValueError("Invalid '__class__' in the dictionary")
+        else:
+            raise ValueError("No '__class__' key found in the dictionary")
