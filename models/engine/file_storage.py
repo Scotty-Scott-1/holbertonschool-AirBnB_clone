@@ -5,9 +5,18 @@
 import json
 import os
 from models.base_model import BaseModel
+from models.user import User
+from models.city import City
+from models.state import State
+from models.review import Review
+from models.place import Place
+from models.amenity import Amenity
 
 
-classes = {'BaseModel': BaseModel}
+classes = {'BaseModel': BaseModel, "User": User, "City": City,
+           "State": State, "Review": Review,
+           "Place": Place, "Amenity": Amenity}
+
 
 class FileStorage:
     """This class manages storage of hbnb models in JSON format"""
