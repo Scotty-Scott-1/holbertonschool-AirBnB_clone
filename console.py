@@ -117,34 +117,35 @@ class HBNBCommand(cmd.Cmd):
         my_list = []
         args_list = arg.split()
         if len(args_list) == 0:
-            for ob in storage.all():
-                my_list.append(print(storage.all()[ob]))
+            for ob in storage.all().values():
+                my_list.append(ob.__str__())
             print(my_list)
         elif len(args_list) == 1:
             if args_list[0] in HBNBCommand.class_list:
 
-                for ob in storage.all():
+                for ob in storage.all().values():
                     if args_list[0] == "BaseModel":
-                        if ob[:9] == "BaseModel":
-                            my_list.append(print(storage.all()[ob]))
+                        if ob.__str__()[:10] == "[BaseModel":
+                            my_list.append(ob.__str__())
                     if args_list[0] == "City":
-                        if ob[:4] == "City":
-                            my_list.append(print(storage.all()[ob]))
+                        if ob.__str__()[:5] == "[City":
+                            my_list.append(ob.__str__())
                     if args_list[0] == "User":
-                        if ob[:4] == "User":
-                            my_list.append(print(storage.all()[ob]))
+                        if ob.__str__()[:5] == "[User":
+                            my_list.append(ob.__str__())
                     if args_list[0] == "State":
-                        if ob[:5] == "State":
-                            my_list.append(print(storage.all()[ob]))
+                        if ob.__str__()[:6] == "[State":
+                            my_list.append(ob.__str__())
                     if args_list[0] == "Review":
-                        if ob[:6] == "Review":
-                            my_list.append(print(storage.all()[ob]))
+                        if ob.__str__()[:7] == "[Review":
+                            my_list.append(ob.__str__())
                     if args_list[0] == "Place":
-                        if ob[:5] == "Place":
-                            my_list.append(print(storage.all()[ob]))
+                        if ob.__str__()[:6] == "[Place":
+                            my_list.append(ob.__str__())
                     if args_list[0] == "Amenity":
-                        if ob[:7] == "Amenity":
-                            my_list.append(print(storage.all()[ob]))
+                        if ob.__str__()[:8] == "[Amenity":
+                            my_list.append(ob.__str__())
+                print(my_list)
 
             else:
                 print("** class doesn't exist **")
