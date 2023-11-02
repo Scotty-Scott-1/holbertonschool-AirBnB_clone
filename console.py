@@ -33,7 +33,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, arg):
         """create an instance of basemodel and print id"""
-        args_list = arg.split(" ")
+        args_list = arg.split("")
         if len(args_list) == 0:
             print("** class name missing **")
         elif args_list[0] not in HBNBCommand.class_list:
@@ -90,6 +90,21 @@ class HBNBCommand(cmd.Cmd):
                     key = "{}.{}".format(class_name, instance_id)
                     del storage.all()[key]
                     storage.save()
+
+    def do_all(self, arg):
+        my_list = []
+        args_list = arg.split()
+        if len(args_list) == 0:
+            for ob in storage.all():
+                my_list.append(print(storage.all()[ob]))
+            print(my_list)
+        elif len(args_list) == 1:
+            if args_list[0] in HBNBCommand.class_list:
+                for ob in storage.all():
+                    if ob[:9] == "BaseModel":
+                        my_list.append(print(storage.all()[ob]))
+            else:
+                print("** class doesn't exist **")
 
 
 if __name__ == '__main__':
