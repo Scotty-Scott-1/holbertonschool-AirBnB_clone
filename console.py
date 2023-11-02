@@ -33,7 +33,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, arg):
         """create an instance of basemodel and print id"""
-        args_list = arg.split("")
+        args_list = arg.split()
         if len(args_list) == 0:
             print("** class name missing **")
         elif args_list[0] not in HBNBCommand.class_list:
