@@ -9,7 +9,6 @@ from models.base_model import BaseModel
 
 
 class TestBaseModel(unittest.TestCase):
-
     def test_instance_creation(self):
         model = BaseModel()
         self.assertTrue(isinstance(model, BaseModel))
@@ -66,6 +65,7 @@ class TestBaseModel(unittest.TestCase):
                          ('2023-11-01T12:00:00'))
         self.assertEqual(model.updated_at, datetime.fromisoformat
                          ('2023-11-01T12:30:00'))
+
 
 if __name__ == '__main__':
     unittest.main()
