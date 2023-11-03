@@ -30,5 +30,6 @@ class TestCity(unittest.TestCase):
     def test_city_inherits_from(self):
         self.assertTrue(issubclass(City, BaseModel))
 
+
 if __name__ == "__main__":
     unittest.main()
