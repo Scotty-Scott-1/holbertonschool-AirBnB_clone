@@ -30,7 +30,7 @@ class HBNBCommand(cmd.Cmd):
 
     def emptyline(self):
         """skip empty line"""
-        pass
+        print(end='')
 
     def help_quit(self):
         """quit"""
