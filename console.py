@@ -52,20 +52,23 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
         else:
             class_name = args_list[0]
-            if class_name == "BaseModel":
-                obj = BaseModel()
-            elif class_name == "User":
-                obj = User()
-            elif class_name == "State":
-                obj = State()
-            elif class_name == "Review":
-                obj = Review()
-            elif class_name == "Place":
-                obj = Place()
-            elif class_name == "City":
-                obj = City()
-            elif class_name == "Amenity":
-                obj = Amenity()
+            class_map = {
+                "BaseModel": BaseModel,
+                "User": User,
+                "State": State,
+                "Review": Review,
+                "Place": Place,
+                "City": City,
+                "Amenity": Amenity
+            }
+
+            if class_name in class_map:
+                obj = class_map[class_name]()
+                storage.new(obj)
+                storage.save()
+                print(obj.id)
+            else:
+                print("** class doesn't exist **")
 
             storage.new(obj)
             storage.save()
@@ -121,14 +124,13 @@ class HBNBCommand(cmd.Cmd):
         my_list = []
         args_list = arg.split()
         if len(args_list) == 0:
-            for ob in storage.all().values():
-                my_list.append(ob.__str__())
+            my_list = [str(ob) for ob in storage.all().values()]
             print(my_list)
         elif len(args_list) == 1:
-            if args_list[0] in HBNBCommand.class_list:
-                for ob in storage.all().values():
-                    if args_list[0] in ob.__str__():
-                        my_list.append(ob.__str__())
+            class_name = args_list[0]
+            if class_name in HBNBCommand.class_list:
+                my_list = [str(ob) for ob in storage.all().values() if
+                           class_name in str(ob)]
                 print(my_list)
             else:
                 print("** class doesn't exist **")
@@ -170,16 +172,6 @@ class HBNBCommand(cmd.Cmd):
                 return
 
             if hasattr(instance, attr_name):
-                attr_type = type(getattr(instance, attr_name))
-                try:
-                    if attr_type == int:
-                        value = int(value)
-                    elif attr_type == float:
-                        value = float(value)
-                except (ValueError, TypeError):
-                    print("** Invalid value for the attribute **")
-                    return
-
                 setattr(instance, attr_name, value)
                 instance.updated_at = datetime.now()
                 storage.save()
