@@ -32,16 +32,6 @@ class HBNBCommand(cmd.Cmd):
         """skip empty line"""
         print(end='')
 
-    def help_quit(self):
-        """quit"""
-        print("Quit command to exit the program")
-        print(' ')
-
-    def help_EOF(self):
-        """help for eof"""
-        print("Quit command to exit the program")
-        print(' ')
-
     def do_create(self, arg):
         """create an instance of basemodel and print id"""
         args_list = arg.split()
