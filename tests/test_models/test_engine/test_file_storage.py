@@ -38,10 +38,10 @@ class TestFileStorage(unittest.TestCase):
                          new_user.to_dict())
 
     def tearDown(self):
-            try:
-                os.remove(FileStorage._FileStorage__file_path)
-            except:
-                pass
+        try:
+            os.remove(FileStorage._FileStorage__file_path)
+        except FileNotFoundError:
+            pass
 
     def delete(self, obj=None):
         """Deletes an object from storage if it exists"""
@@ -95,7 +95,6 @@ class TestFileStorage(unittest.TestCase):
         self.assertEqual(loaded_storage.all()[key].to_dict(),
                          new_user.to_dict())
 
-
     """Test Erwan & Nathalie"""
 
     def test_save(self):
@@ -120,7 +119,8 @@ class TestFileStorage(unittest.TestCase):
             """Class method to open test's environment"""
             cls.storage = FileStorage()
             try:
-                os.rename(FileStorage._FileStorage__file_path, "test_file.json")
+                os.rename(FileStorage._FileStorage__file_path,
+                          "test_file.json")
             except Exception:
                 pass
 
