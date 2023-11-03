@@ -176,7 +176,7 @@ class HBNBCommand(cmd.Cmd):
                 instance.updated_at = datetime.now()
                 storage.save()
             else:
-                print("** value missing **")
+                print("** no instance found **")
 
 
 if __name__ == '__main__':
