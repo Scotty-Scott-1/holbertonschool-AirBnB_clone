@@ -22,14 +22,14 @@ class TestFileStorage(unittest.TestCase):
         try:
             os.remove(FileStorage._FileStorage__file_path)
         except FileNotFoundError:
-            pass
+            pass"""
 
     def delete(self, obj=None):
         if obj is not None:
             key = "{}.{}".format(obj.__class__.__name__, obj.id)
             if key in FileStorage.__objects:
                 del FileStorage.__objects[key]
-                self.save()"""
+                self.save()
 
     def test_save_reload(self):
         new_user = User()
@@ -41,7 +41,7 @@ class TestFileStorage(unittest.TestCase):
         self.assertEqual(loaded_storage.all()[key].to_dict(),
                          new_user.to_dict())
 
-    """def test_load_multiple_classes(self):
+    def test_load_multiple_classes(self):
         new_user = User()
         new_city = City()
         new_state = State()
@@ -83,7 +83,7 @@ class TestFileStorage(unittest.TestCase):
         loaded_storage.reload()
         key = "User.{}".format(new_user.id)
         self.assertEqual(loaded_storage.all()[key].to_dict(),
-                         new_user.to_dict())"""
+                         new_user.to_dict())
 
     """Test Erwan & Nathalie"""
 
