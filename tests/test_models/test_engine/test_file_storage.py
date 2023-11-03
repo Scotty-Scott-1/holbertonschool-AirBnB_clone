@@ -16,13 +16,13 @@ import os
 
 class TestFileStorage(unittest.TestCase):
     """def setUp(self):
-        self.storage = FileStorage()
+        self.storage = FileStorage()"""
 
     def tearDown(self):
         try:
             os.remove(FileStorage._FileStorage__file_path)
         except FileNotFoundError:
-            pass"""
+            pass
 
     def delete(self, obj=None):
         if obj is not None:
