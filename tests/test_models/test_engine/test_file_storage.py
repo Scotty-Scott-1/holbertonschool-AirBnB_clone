@@ -15,8 +15,8 @@ import os
 
 
 class TestFileStorage(unittest.TestCase):
-    """def setUp(self):
-        self.storage = FileStorage()"""
+    def setUp(self):
+        self.storage = FileStorage()
 
     def tearDown(self):
         try:
@@ -104,15 +104,15 @@ class TestFileStorage(unittest.TestCase):
         key = model.__class__.__name__ + "." + model.id
         self.assertIn(key, self.storage.all())
 
-        @classmethod
-        def setUpClass(cls):
-            """Class method to open test's environment"""
-            cls.storage = FileStorage()
-            try:
-                os.rename(FileStorage._FileStorage__file_path,
-                          "test_file.json")
-            except Exception:
-                pass
+    @classmethod
+    def setUpClass(cls):
+        """Class method to open test's environment"""
+        cls.storage = FileStorage()
+        try:
+            os.rename(FileStorage._FileStorage__file_path,
+                        "test_file.json")
+        except Exception:
+            pass
 
     @classmethod
     def tearDownClass(cls):
