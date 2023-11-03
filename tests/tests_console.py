@@ -116,6 +116,7 @@ class TestHBNBCommand(unittest.TestCase):
         expected_output = "** no instance found **\n"
         self.assertEqual(self.mock_stdout.getvalue(), expected_output)
 
+
 class CaptureOutput:
     def __enter__(self):
         self.old_stdout = sys.stdout
@@ -166,9 +167,9 @@ class CaptureOutput:
 
     def test_update_with_invalid_attribute(self):
         instance_id = self.obj.id
-        with patch('builtins.input',
-                side_effect=['update BaseModel', instance_id,
-                                'non_existent_attribute', 'John']):
+        with patch(
+            'builtins.input', side_effect=['update BaseModel', instance_id,
+                                           'non_existent_attribute', 'John']):
             self.cmd.onecmd("update BaseModel {} non_existent_attribute 'John'"
                             .format(instance_id))
         expected_output = "** Invalid value for the attribute **\n"
@@ -178,7 +179,7 @@ class CaptureOutput:
         class_name = "BaseModel"
         instance_id = self.obj.id
         cmd_input = (f"update {class_name} {instance_id} "
-            "updated_at '2023-11-03T12:00:00'\n")
+                     "updated_at '2023-11-03T12:00:00'\n")
         # Ensure that the date update was performed correctly
 
     def test_update_with_invalid_model_class(self):
