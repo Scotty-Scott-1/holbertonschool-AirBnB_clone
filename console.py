@@ -16,12 +16,12 @@ from models.amenity import Amenity
 
 
 class HBNBCommand(cmd.Cmd):
-    prompt = "(hbnb)"
-    class_list = ["BaseModel", "User", "State", "Review",
-                  "Place", "City", "Amenity"]
+    prompt = "(hbnb) "
+    class_list = ["BaseModel", "User", "State", "Review", "Place",
+                  "City", "Amenity"]
 
     def do_quit(self, arg):
-        """for quit command interpreter"""
+        """Quit command to exit the program"""
         return True
 
     def do_EOF(self, arg):
@@ -29,37 +29,60 @@ class HBNBCommand(cmd.Cmd):
         return True
 
     def emptyline(self):
-        """skip empty line"""
+        """Skip empty line"""
         pass
-
-    def help_quit(self):
-        """quit"""
-        print("Quit command to exit the program")
-        print(' ')
-
-    def help_EOF(self):
-        """help for eof"""
-        print("Quit command to exit the program")
-        print(' ')
 
     def do_create(self, arg):
         """Create an instance of BaseModel and print its ID"""
-        args_list = arg.split()
-        if len(args_list) == 0:
+        args_list = shlex.split(arg)
+        if not args_list:
             print("** class name missing **")
-        elif args_list[0] not in HBNBCommand.class_list:
+            return
+
+        class_name = args_list[0]
+        if class_name not in HBNBCommand.class_list:
             print("** class doesn't exist **")
-        else:
-            class_name = args_list[0]
-            obj = eval(class_name)()
-            storage.new(obj)
-            storage.save()
-            print(obj.id)
+            return
+
+        if len(args_list) == 1:
+            print("** value missing **")
+            return
+
+        obj = eval(class_name)()
+        for arg in args_list[1:]:
+            if "=" not in arg:
+                print("** Invalid attribute format**")
+                return
+
+            attr_name, attr_value = arg.split('=')
+            if not attr_value:
+                print("** value missing **")
+                return
+
+            if attr_value[0] == '"' and attr_value[-1] == '"':
+                attr_value = attr_value[1:-1]
+
+            if hasattr(obj, attr_name):
+                attr_type = type(getattr(obj, attr_name))
+                try:
+                    if attr_type == int:
+                        attr_value = int(attr_value)
+                    elif attr_type == float:
+                        attr_value = float(attr_value)
+                except (ValueError, TypeError):
+                    print("** Invalid value for the attribute **")
+                    return
+
+                setattr(obj, attr_name, attr_value)
+
+        storage.new(obj)
+        storage.save()
+        print(obj.id)
 
     def do_show(self, arg):
         """Show an instance"""
-        args_list = arg.split()
-        if len(args_list) == 0:
+        args_list = shlex.split(arg)
+        if not args_list:
             print("** class name missing **")
         elif args_list[0] not in HBNBCommand.class_list:
             print("** class doesn't exist **")
@@ -76,8 +99,8 @@ class HBNBCommand(cmd.Cmd):
 
     def do_destroy(self, arg):
         """Delete an instance"""
-        args_list = arg.split()
-        if len(args_list) == 0:
+        args_list = shlex.split(arg)
+        if not args_list:
             print("** class name missing **")
         elif args_list[0] not in HBNBCommand.class_list:
             print("** class doesn't exist **")
@@ -95,8 +118,8 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, arg):
         """List all instances or instances of a specific class"""
         my_list = []
-        args_list = arg.split()
-        if len(args_list) == 0:
+        args_list = shlex.split(arg)
+        if not args_list:
             for obj in storage.all().values():
                 my_list.append(obj.__str__())
             print(my_list)
@@ -111,7 +134,7 @@ class HBNBCommand(cmd.Cmd):
     def do_update(self, arg):
         """Update an instance's attributes"""
         args_list = shlex.split(arg)
-        if len(args_list) == 0:
+        if not args_list:
             print("** class name missing **")
             return
         elif args_list[0] not in HBNBCommand.class_list:
@@ -120,12 +143,14 @@ class HBNBCommand(cmd.Cmd):
         elif len(args_list) < 2:
             print("** instance id missing **")
             return
+
         class_name = args_list[0]
         instance_id = args_list[1]
         key = "{}.{}".format(class_name, instance_id)
         if key not in storage.all():
             print("** no instance found **")
             return
+
         instance = storage.all()[key]
         if len(args_list) < 3:
             print("** attribute name missing **")
@@ -133,24 +158,26 @@ class HBNBCommand(cmd.Cmd):
         elif len(args_list) < 4:
             print("** value missing **")
             return
-        else:
-            attr_name = args_list[2]
-            value = args_list[3]
-            if attr_name in ["id", "created_at", "updated_at"]:
+
+        attr_name = args_list[2]
+        value = args_list[3]
+        if attr_name in ["id", "created_at", "updated_at"]:
+            return
+
+        if hasattr(instance, attr_name):
+            attr_type = type(getattr(instance, attr_name))
+            try:
+                if attr_type == int:
+                    value = int(value)
+                elif attr_type == float:
+                    value = float(value)
+            except (ValueError, TypeError):
+                print("** Invalid value for the attribute **")
                 return
-            if hasattr(instance, attr_name):
-                attr_type = type(getattr(instance, attr_name))
-                try:
-                    if attr_type == int:
-                        value = int(value)
-                    elif attr_type == float:
-                        value = float(value)
-                except (ValueError, TypeError):
-                    print("** Invalid value for the attribute **")
-                    return
-                setattr(instance, attr_name, value)
-                instance.updated_at = datetime.now()
-                storage.save()
+
+            setattr(instance, attr_name, value)
+            instance.updated_at = datetime.now()
+            storage.save()
 
 
 if __name__ == '__main__':
