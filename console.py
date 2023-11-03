@@ -17,18 +17,11 @@ from models.amenity import Amenity
 
 class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb)"
-    class_list = {
-        "BaseModel": BaseModel,
-        "User": User,
-        "State": State,
-        "City": City,
-        "Review": Review,
-        "Place": Place,
-        "Amenity": Amenity
-    }
+    class_list = ["BaseModel", "User", "State", "Review",
+                "Place", "City", "Amenity"]
 
     def do_quit(self, arg):
-        """Quit command to exit the program"""
+        """for quit command interpreter"""
         return True
 
     def do_EOF(self, arg):
@@ -40,7 +33,7 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def help_quit(self):
-        """Quit command to exit the program"""
+        """quit"""
         print("Quit command to exit the program")
         print(' ')
 
@@ -50,15 +43,30 @@ class HBNBCommand(cmd.Cmd):
         print(' ')
 
     def do_create(self, arg):
-        """create an instance of class and print id"""
+        """create an instance of basemodel and print id"""
         args_list = arg.split()
         if len(args_list) == 0:
             print("** class name missing **")
-        elif args_list[0] not in self.class_list:
+        elif args_list[0] not in HBNBCommand.class_list:
+            """elif args_list[0] not in HBNBCommand.class_list:"""
             print("** class doesn't exist **")
         else:
             class_name = args_list[0]
-            obj = self.class_list[class_name]()
+            if class_name == "BaseModel":
+                obj = BaseModel()
+            elif class_name == "User":
+                obj = User()
+            elif class_name == "State":
+                obj = State()
+            elif class_name == "Review":
+                obj = Review()
+            elif class_name == "Place":
+                obj = Place()
+            elif class_name == "City":
+                obj = City()
+            elif class_name == "Amenity":
+                obj = Amenity()
+
             storage.new(obj)
             storage.save()
             print(obj.id)
@@ -71,7 +79,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
         else:
             class_name = args_list[0]
-            if class_name not in self.class_list:
+            if class_name not in HBNBCommand.class_list:
                 print("** class doesn't exist **")
 
             elif len(args_list) < 2:
@@ -94,7 +102,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
         else:
             class_name = args_list[0]
-            if class_name not in self.class_list:
+            if class_name not in HBNBCommand.class_list:
                 print("** class doesn't exist **")
 
             elif len(args_list) < 2:
@@ -114,13 +122,13 @@ class HBNBCommand(cmd.Cmd):
         args_list = arg.split()
         if len(args_list) == 0:
             for ob in storage.all().values():
-                my_list.append(repr(ob))
+                my_list.append(ob.__str__())
             print(my_list)
         elif len(args_list) == 1:
-            if args_list[0] in self.class_list:
+            if args_list[0] in HBNBCommand.class_list:
                 for ob in storage.all().values():
-                    if args_list[0] in repr(ob):
-                        my_list.append(repr(ob))
+                    if args_list[0] in ob.__str__():
+                        my_list.append(ob.__str__())
                 print(my_list)
             else:
                 print("** class doesn't exist **")
@@ -131,7 +139,7 @@ class HBNBCommand(cmd.Cmd):
         if len(args_list) == 0:
             print("** class name missing **")
             return
-        elif args_list[0] not in self.class_list:
+        elif args_list[0] not in HBNBCommand.class_list:
             print("** class doesn't exist **")
             return
         elif len(args_list) < 2:
