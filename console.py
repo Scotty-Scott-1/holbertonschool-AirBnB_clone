@@ -18,14 +18,14 @@ from models.review import Review
 class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
     class_dict = {
-        "BaseModel": BaseModel,
-        "User": User,
-        "State": State,
-        "Review": Review,
-        "Place": Place,
-        "City": City,
-        "Amenity": Amenity
-    }
+          "BaseModel": BaseModel,
+          "User": User,
+          "State": State,
+          "Review": Review,
+          "Place": Place,
+          "City": City,
+          "Amenity": Amenity
+     }
 
     def do_quit(self, arg):
         """Quit command to exit the program"""
@@ -46,11 +46,10 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
         class_name = args_list[0]
-        if class_name not in HBNBCommand.class_dict:
+        if class_name not in HBNBCommand.supported_classes:
             print("** class doesn't exist **")
         else:
-            obj = HBNBCommand.class_dict[class_name]()
-            storage.new(obj)
+            obj = storage.new(HBNBCommand.supported_classes[class_name]())
             storage.save()
             print(obj.id)
 
@@ -62,7 +61,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
         else:
             class_name = args_list[0]
-            if class_name not in HBNBCommand.class_dict:
+            if class_name not in HBNBCommand.supported_classes:
                 print("** class doesn't exist **")
             elif len(args_list) < 2:
                 print("** instance id missing **")
@@ -83,7 +82,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
         else:
             class_name = args_list[0]
-            if class_name not in HBNBCommand.class_dict:
+            if class_name not in HBNBCommand.supported_classes:
                 print("** class doesn't exist **")
             elif len(args_list) < 2:
                 print("** instance id missing **")
@@ -104,7 +103,7 @@ class HBNBCommand(cmd.Cmd):
                 my_list.append(ob.__str__())
             print(my_list)
         elif len(args_list) == 1:
-            if args_list[0] in HBNBCommand.class_dict:
+            if args_list[0] in HBNBCommand.supported_classes:
                 for ob in storage.all().values():
                     if args_list[0] in ob.__str__():
                         my_list.append(ob.__str__())
@@ -119,7 +118,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
         class_name = args_list[0]
-        if class_name not in HBNBCommand.class_dict:
+        if class_name not in HBNBCommand.supported_classes:
             print("** class doesn't exist **")
             return
         elif len(args_list) < 2:
