@@ -18,7 +18,7 @@ from models.amenity import Amenity
 class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb)"
     class_list = ["BaseModel", "User", "State", "Review",
-                "Place", "City", "Amenity"]
+                 "Place", "City", "Amenity"]
 
     def do_quit(self, arg):
         """for quit command interpreter"""
@@ -30,7 +30,17 @@ class HBNBCommand(cmd.Cmd):
 
     def emptyline(self):
         """skip empty line"""
-        print(end='')
+        pass
+
+    def help_quit(self):
+        """quit"""
+        print("Quit command to exit the program")
+        print(' ')
+
+    def help_EOF(self):
+        """help for eof"""
+        print("Quit command to exit the program")
+        print(' ')
 
     def do_create(self, arg):
         """create an instance of basemodel and print id"""
@@ -42,23 +52,20 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
         else:
             class_name = args_list[0]
-            class_map = {
-                "BaseModel": BaseModel,
-                "User": User,
-                "State": State,
-                "Review": Review,
-                "Place": Place,
-                "City": City,
-                "Amenity": Amenity
-            }
-
-            if class_name in class_map:
-                obj = class_map[class_name]()
-                storage.new(obj)
-                storage.save()
-                print(obj.id)
-            else:
-                print("** class doesn't exist **")
+            if class_name == "BaseModel":
+                obj = BaseModel()
+            elif class_name == "User":
+                obj = User()
+            elif class_name == "State":
+                obj = State()
+            elif class_name == "Review":
+                obj = Review()
+            elif class_name == "Place":
+                obj = Place()
+            elif class_name == "City":
+                obj = City()
+            elif class_name == "Amenity":
+                obj = Amenity()
 
             storage.new(obj)
             storage.save()
@@ -114,13 +121,14 @@ class HBNBCommand(cmd.Cmd):
         my_list = []
         args_list = arg.split()
         if len(args_list) == 0:
-            my_list = [str(ob) for ob in storage.all().values()]
+            for ob in storage.all().values():
+                my_list.append(ob.__str__())
             print(my_list)
         elif len(args_list) == 1:
-            class_name = args_list[0]
-            if class_name in HBNBCommand.class_list:
-                my_list = [str(ob) for ob in storage.all().values() if
-                           class_name in str(ob)]
+            if args_list[0] in HBNBCommand.class_list:
+                for ob in storage.all().values():
+                    if args_list[0] in ob.__str__():
+                        my_list.append(ob.__str__())
                 print(my_list)
             else:
                 print("** class doesn't exist **")
@@ -162,12 +170,23 @@ class HBNBCommand(cmd.Cmd):
                 return
 
             if hasattr(instance, attr_name):
+                attr_type = type(getattr(instance, attr_name))
+                try:
+                    if attr_type == int:
+                        value = int(value)
+                    elif attr_type == float:
+                        value = float(value)
+                except (ValueError, TypeError):
+                    print("** Invalid value for the attribute **")
+                    return
+
                 setattr(instance, attr_name, value)
                 instance.updated_at = datetime.now()
                 storage.save()
             else:
-                print("** no instance found **")
+                print("** value missing **")
 
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
+
