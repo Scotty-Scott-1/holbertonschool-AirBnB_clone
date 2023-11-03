@@ -18,18 +18,14 @@ class TestFileStorage(unittest.TestCase):
     def setUp(self):
         self.storage = FileStorage()
 
-    def tearDown(self):
-        try:
-            os.remove(FileStorage._FileStorage__file_path)
-        except FileNotFoundError:
-            pass
+    def test_all(self):
+        self.assertIsInstance(self.storage.all(), dict)
 
-    def delete(self, obj=None):
-        if obj is not None:
-            key = "{}.{}".format(obj.__class__.__name__, obj.id)
-            if key in FileStorage.__objects:
-                del FileStorage.__objects[key]
-                self.save()
+    def test_new(self):
+        new_user = User()
+        self.storage.new(new_user)
+        key = "User.{}".format(new_user.id)
+        self.assertEqual(self.storage.all()[key], new_user)
 
     def test_save_reload(self):
         new_user = User()
@@ -40,6 +36,20 @@ class TestFileStorage(unittest.TestCase):
         key = "User.{}".format(new_user.id)
         self.assertEqual(loaded_storage.all()[key].to_dict(),
                          new_user.to_dict())
+
+    def tearDown(self):
+            try:
+                os.remove(FileStorage._FileStorage__file_path)
+            except:
+                pass
+
+    def delete(self, obj=None):
+        """Deletes an object from storage if it exists"""
+        if obj is not None:
+            key = "{}.{}".format(obj.__class__.__name__, obj.id)
+            if key in FileStorage.__objects:
+                del FileStorage.__objects[key]
+                self.save()
 
     def test_load_multiple_classes(self):
         new_user = User()
