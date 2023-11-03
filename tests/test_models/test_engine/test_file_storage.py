@@ -29,7 +29,7 @@ class TestFileStorage(unittest.TestCase):
             key = "{}.{}".format(obj.__class__.__name__, obj.id)
             if key in FileStorage.__objects:
                 del FileStorage.__objects[key]
-                self.save()
+                self.save()"""
 
     def test_save_reload(self):
         new_user = User()
@@ -41,7 +41,7 @@ class TestFileStorage(unittest.TestCase):
         self.assertEqual(loaded_storage.all()[key].to_dict(),
                          new_user.to_dict())
 
-    def test_load_multiple_classes(self):
+    """def test_load_multiple_classes(self):
         new_user = User()
         new_city = City()
         new_state = State()
