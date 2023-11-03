@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 """contains the entry point of the command interpreter"""
+
+
 import cmd
 import shlex
 from models import storage
@@ -48,19 +50,20 @@ class HBNBCommand(cmd.Cmd):
             """elif args_list[0] not in HBNBCommand.class_list:"""
             print("** class doesn't exist **")
         else:
-            if args_list[0] == "BaseModel":
+            class_name = args_list[0]
+            if class_name == "BaseModel":
                 obj = BaseModel()
-            elif args_list[0] == "User":
+            elif class_name == "User":
                 obj = User()
-            elif args_list[0] == "State":
+            elif class_name == "State":
                 obj = State()
-            elif args_list[0] == "Review":
+            elif class_name == "Review":
                 obj = Review()
-            elif args_list[0] == "Place":
+            elif class_name == "Place":
                 obj = Place()
-            elif args_list[0] == "City":
+            elif class_name == "City":
                 obj = City()
-            elif args_list[0] == "Amenity":
+            elif class_name == "Amenity":
                 obj = Amenity()
 
             storage.new(obj)
@@ -110,7 +113,6 @@ class HBNBCommand(cmd.Cmd):
                 if key not in storage.all():
                     print("** no instance found **")
                 else:
-                    key = "{}.{}".format(class_name, instance_id)
                     del storage.all()[key]
                     storage.save()
 
@@ -123,31 +125,10 @@ class HBNBCommand(cmd.Cmd):
             print(my_list)
         elif len(args_list) == 1:
             if args_list[0] in HBNBCommand.class_list:
-
                 for ob in storage.all().values():
-                    if args_list[0] == "BaseModel":
-                        if ob.__str__()[:10] == "[BaseModel":
-                            my_list.append(ob.__str__())
-                    if args_list[0] == "City":
-                        if ob.__str__()[:5] == "[City":
-                            my_list.append(ob.__str__())
-                    if args_list[0] == "User":
-                        if ob.__str__()[:5] == "[User":
-                            my_list.append(ob.__str__())
-                    if args_list[0] == "State":
-                        if ob.__str__()[:6] == "[State":
-                            my_list.append(ob.__str__())
-                    if args_list[0] == "Review":
-                        if ob.__str__()[:7] == "[Review":
-                            my_list.append(ob.__str__())
-                    if args_list[0] == "Place":
-                        if ob.__str__()[:6] == "[Place":
-                            my_list.append(ob.__str__())
-                    if args_list[0] == "Amenity":
-                        if ob.__str__()[:8] == "[Amenity":
-                            my_list.append(ob.__str__())
+                    if args_list[0] in ob.__str__():
+                        my_list.append(ob.__str__())
                 print(my_list)
-
             else:
                 print("** class doesn't exist **")
 
@@ -183,20 +164,25 @@ class HBNBCommand(cmd.Cmd):
                 print("** value missing **")
                 return
 
-            else:
-                value = args_list[3]
-                if attr_name in ["id", "created_at", "updated_at"]:
+            value = args_list[3]
+            if attr_name in ["id", "created_at", "updated_at"]:
+                return
+
+            if hasattr(instance, attr_name):
+                attr_type = type(getattr(instance, attr_name))
+                try:
+                    if attr_type == int:
+                        value = int(value)
+                    elif attr_type == float:
+                        value = float(value)
+                except (ValueError, TypeError):
+                    print("** Invalid value for the attribute **")
                     return
 
-                if hasattr(instance, attr_name):
-                    if isinstance(getattr(instance, attr_name), int):
-                        value = int(value)
-                    if isinstance(getattr(instance, attr_name), float):
-                        value = float(value)
-                    setattr(instance, attr_name, value)
-                    storage.save()
-                else:
-                    print("** value missing **")
+                setattr(instance, attr_name, value)
+                storage.save()
+            else:
+                print("** value missing **")
 
 
 if __name__ == '__main__':
