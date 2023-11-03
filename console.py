@@ -16,7 +16,7 @@ from models.amenity import Amenity
 
 
 class HBNBCommand(cmd.Cmd):
-    prompt = "(hbnb)"
+    prompt = "(hbnb) "
     class_list = ["BaseModel", "User", "State", "Review",
                   "Place", "City", "Amenity"]
 
@@ -25,7 +25,7 @@ class HBNBCommand(cmd.Cmd):
         return True
 
     def do_EOF(self, arg):
-        """Handle the EOF (Ctrl+D) to exit the program"""
+        """End of file command to exit the program"""
         return True
 
     def emptyline(self):
@@ -34,9 +34,10 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, arg):
         """create an instance of basemodel and print id"""
-        args_list = arg.split()
+        args_list = shlex.split(arg)
         if len(args_list) == 0:
             print("** class name missing **")
+            return
         elif args_list[0] not in HBNBCommand.class_list:
             """elif args_list[0] not in HBNBCommand.class_list:"""
             print("** class doesn't exist **")
@@ -63,7 +64,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_show(self, arg):
         """show an instance"""
-        args_list = arg.split()
+        args_list = shlex.split(arg)
 
         if len(args_list) == 0:
             print("** class name missing **")
@@ -86,7 +87,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_destroy(self, arg):
         """delete an instance"""
-        args_list = arg.split()
+        args_list = shlex.split(arg)
 
         if len(args_list) == 0:
             print("** class name missing **")
@@ -109,7 +110,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, arg):
         my_list = []
-        args_list = arg.split()
+        args_list = shlex.split(arg)
         if len(args_list) == 0:
             for ob in storage.all().values():
                 my_list.append(ob.__str__())

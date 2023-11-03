@@ -44,17 +44,17 @@ class FileStorage:
         serialized_objects = {}
         for key, obj in FileStorage.__objects.items():
             serialized_objects[key] = obj.to_dict()
-        with open(FileStorage.__file_path, 'w') as file:
-            json.dump(serialized_objects, file)
+        with open(FileStorage.__file_path, 'w', encoding='utf-8') as file:
+            json.dump(serialized_objects, file, indent=4)
 
     def reload(self):
         """Loads storage dictionary from a file"""
-        if os.path.exists(FileStorage.__file_path):
-            with open(FileStorage.__file_path, 'r') as file:
+        try:
+            with open(self.__file_path, "r", encoding='utf-8') as file:
                 data = json.load(file)
                 for key, value in data.items():
-                    class_name = value.get('__class__')
-                    if class_name in classes:
-                        self.all()[key] = classes[value['__class__']](**value)
-                    else:
-                        pass
+                    class_name, obj_id = key.split(".")
+                    instance = eval(class_name)(**value)
+                    self.__objects[key] = instance
+        except FileNotFoundError:
+            pass
