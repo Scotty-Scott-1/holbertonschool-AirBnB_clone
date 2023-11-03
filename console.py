@@ -4,6 +4,7 @@
 
 import cmd
 import shlex
+from datetime import datetime
 from models import storage
 from models.base_model import BaseModel
 from models.city import City
@@ -180,6 +181,7 @@ class HBNBCommand(cmd.Cmd):
                     return
 
                 setattr(instance, attr_name, value)
+                instance.updated_at = datetime.now()
                 storage.save()
             else:
                 print("** value missing **")
