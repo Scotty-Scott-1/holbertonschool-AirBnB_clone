@@ -21,7 +21,7 @@ class HBNBCommand(cmd.Cmd):
                   "Place", "City", "Amenity"]
 
     def do_quit(self, arg):
-        """for quit command interpreter"""
+        """Quit command to exit the program"""
         return True
 
     def do_EOF(self, arg):
@@ -31,16 +31,6 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         """skip empty line"""
         pass
-
-    def help_quit(self):
-        """quit"""
-        print("Quit command to exit the program")
-        print(' ')
-
-    def help_EOF(self):
-        """help for eof"""
-        print("Quit command to exit the program")
-        print(' ')
 
     def do_create(self, arg):
         """create an instance of basemodel and print id"""
@@ -184,7 +174,7 @@ class HBNBCommand(cmd.Cmd):
                 instance.updated_at = datetime.now()
                 storage.save()
             else:
-                print("** value missing **")
+                print("** Invalid value for the attribute **")
 
 
 if __name__ == '__main__':

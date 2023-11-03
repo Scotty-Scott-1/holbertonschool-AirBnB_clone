@@ -12,6 +12,7 @@ from models.place import Place
 from models.amenity import Amenity
 from models.engine.file_storage import FileStorage
 import os
+from models import storage
 
 
 class TestFileStorage(unittest.TestCase):
@@ -94,6 +95,11 @@ class TestFileStorage(unittest.TestCase):
         key = "User.{}".format(new_user.id)
         self.assertEqual(loaded_storage.all()[key].to_dict(),
                          new_user.to_dict())
+
+    def test_duplicate_object_creation(self):
+        user1 = User()
+        user2 = User()
+        self.assertNotEqual(user1.id, user2.id)
 
     """Test Erwan & Nathalie"""
 
