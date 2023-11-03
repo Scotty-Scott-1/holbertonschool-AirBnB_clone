@@ -7,18 +7,25 @@ import shlex
 from datetime import datetime
 from models import storage
 from models.base_model import BaseModel
-from models.city import City
 from models.user import User
 from models.state import State
-from models.review import Review
-from models.place import Place
+from models.city import City
 from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
 
 class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
-    class_list = ["BaseModel", "User", "State", "Review",
-                  "Place", "City", "Amenity"]
+    class_dict = {
+        "BaseModel": BaseModel,
+        "User": User,
+        "State": State,
+        "Review": Review,
+        "Place": Place,
+        "City": City,
+        "Amenity": Amenity
+    }
 
     def do_quit(self, arg):
         """Quit command to exit the program"""
@@ -33,31 +40,16 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_create(self, arg):
-        """create an instance of basemodel and print id"""
+        """create an instance of class and print id"""
         args_list = shlex.split(arg)
         if len(args_list) == 0:
             print("** class name missing **")
             return
-        elif args_list[0] not in HBNBCommand.class_list:
-            """elif args_list[0] not in HBNBCommand.class_list:"""
+        class_name = args_list[0]
+        if class_name not in HBNBCommand.class_dict:
             print("** class doesn't exist **")
         else:
-            class_name = args_list[0]
-            if class_name == "BaseModel":
-                obj = BaseModel()
-            elif class_name == "User":
-                obj = User()
-            elif class_name == "State":
-                obj = State()
-            elif class_name == "Review":
-                obj = Review()
-            elif class_name == "Place":
-                obj = Place()
-            elif class_name == "City":
-                obj = City()
-            elif class_name == "Amenity":
-                obj = Amenity()
-
+            obj = HBNBCommand.class_dict[class_name]()
             storage.new(obj)
             storage.save()
             print(obj.id)
@@ -70,12 +62,10 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
         else:
             class_name = args_list[0]
-            if class_name not in HBNBCommand.class_list:
+            if class_name not in HBNBCommand.class_dict:
                 print("** class doesn't exist **")
-
             elif len(args_list) < 2:
                 print("** instance id missing **")
-
             else:
                 instance_id = args_list[1]
                 key = "{}.{}".format(class_name, instance_id)
@@ -93,12 +83,10 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
         else:
             class_name = args_list[0]
-            if class_name not in HBNBCommand.class_list:
+            if class_name not in HBNBCommand.class_dict:
                 print("** class doesn't exist **")
-
             elif len(args_list) < 2:
                 print("** instance id missing **")
-
             else:
                 instance_id = args_list[1]
                 key = "{}.{}".format(class_name, instance_id)
@@ -116,7 +104,7 @@ class HBNBCommand(cmd.Cmd):
                 my_list.append(ob.__str__())
             print(my_list)
         elif len(args_list) == 1:
-            if args_list[0] in HBNBCommand.class_list:
+            if args_list[0] in HBNBCommand.class_dict:
                 for ob in storage.all().values():
                     if args_list[0] in ob.__str__():
                         my_list.append(ob.__str__())
@@ -130,14 +118,14 @@ class HBNBCommand(cmd.Cmd):
         if len(args_list) == 0:
             print("** class name missing **")
             return
-        elif args_list[0] not in HBNBCommand.class_list:
+        class_name = args_list[0]
+        if class_name not in HBNBCommand.class_dict:
             print("** class doesn't exist **")
             return
         elif len(args_list) < 2:
             print("** instance id missing **")
             return
 
-        class_name = args_list[0]
         instance_id = args_list[1]
         key = "{}.{}".format(class_name, instance_id)
 
