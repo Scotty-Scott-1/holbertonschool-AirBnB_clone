@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """contains the entry point of the command interpreter"""
 import cmd
+import shlex
 from models import storage
 from models.base_model import BaseModel
 from models.city import City
@@ -151,35 +152,51 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
 
     def do_update(self, arg):
-        args_list = arg.split()
+        args_list = shlex.split(arg)
+
         if len(args_list) == 0:
             print("** class name missing **")
+            return
         elif args_list[0] not in HBNBCommand.class_list:
             print("** class doesn't exist **")
+            return
         elif len(args_list) < 2:
             print("** instance id missing **")
-        else:
-            class_name = args_list[0]
-            instance_id = args_list[1]
-            key = "{}.{}".format(class_name, instance_id)
-            if key not in storage.all():
-                print("** no instance found **")
-                return
-            else:
-                instance = storage.all()[key]
+            return
 
-            if len(args_list) < 3:
-                print("** attribute name missing **")
+        class_name = args_list[0]
+        instance_id = args_list[1]
+        key = "{}.{}".format(class_name, instance_id)
+
+        if key not in storage.all():
+            print("** no instance found **")
+            return
+
+        instance = storage.all()[key]
+
+        if len(args_list) < 3:
+            print("** attribute name missing **")
+            return
+        else:
+            attr_name = args_list[2]
+            if len(args_list) < 4:
+                print("** value missing **")
                 return
+
             else:
-                attr_name = args_list[2]
-                if len(args_list) < 4:
-                    print("** value missing **")
+                value = args_list[3]
+                if attr_name in ["id", "created_at", "updated_at"]:
+                    return
+
+                if hasattr(instance, attr_name):
+                    if isinstance(getattr(instance, attr_name), int):
+                        value = int(value)
+                    if isinstance(getattr(instance, attr_name), float):
+                        value = float(value)
+                    setattr(instance, attr_name, value)
+                    storage.save()
                 else:
-                    value = args_list[3]
-                    if hasattr(instance, attr_name):
-                        setattr(instance, attr_name, value)
-                        storage.save()
+                    print("** value missing **")
 
 
 if __name__ == '__main__':
