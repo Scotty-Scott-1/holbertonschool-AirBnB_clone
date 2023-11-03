@@ -53,4 +53,8 @@ class FileStorage:
             with open(FileStorage.__file_path, 'r') as file:
                 data = json.load(file)
                 for key, value in data.items():
-                    self.all()[key] = classes[value['__class__']](**value)
+                    class_name = value.get('__class__')
+                    if class_name in classes:
+                        self.all()[key] = classes[value['__class__']](**value)
+                    else:
+                        pass
