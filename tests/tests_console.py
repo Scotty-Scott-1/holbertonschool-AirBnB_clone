@@ -105,9 +105,14 @@ class TestHBNBCommand(unittest.TestCase):
 
     def test_update_valid_attribute(self):
         instance_id = self.obj.id
-        with patch('builtins.input', side_effect=['update BaseModel', instance_id, 'non_existent_attribute', 'John']):
-            self.cmd.onecmd("update BaseModel {} non_existent_attribute 'John'".format(instance_id))
-        expected_output = "** value missing **\n"  # Output message in case 'non_existent_attribute' does not exist
+        with patch('builtins.input',
+                   side_effect=['update BaseModel',
+                                instance_id, 'non_existent_attribute',
+                                'John']):
+            self.cmd.onecmd
+            ("update BaseModel {} non_existent_attribute 'John'".format
+             (instance_id))
+        expected_output = "** value missing **\n"
         self.assertEqual(self.mock_stdout.getvalue(), expected_output)
 
     def test_do_update_with_nonexistent_instance(self):
@@ -116,6 +121,7 @@ class TestHBNBCommand(unittest.TestCase):
             self.cmd.onecmd("update BaseModel 12345 name \"UpdatedName\"")
         expected_output = "** no instance found **\n"
         self.assertEqual(self.mock_stdout.getvalue(), expected_output)
+
 
 if __name__ == '__main__':
     unittest.main()
