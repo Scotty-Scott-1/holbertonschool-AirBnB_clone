@@ -18,7 +18,7 @@ from models.amenity import Amenity
 class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb)"
     class_list = ["BaseModel", "User", "State", "Review",
-                 "Place", "City", "Amenity"]
+                  "Place", "City", "Amenity"]
 
     def do_quit(self, arg):
         """for quit command interpreter"""
