@@ -15,7 +15,7 @@ The Airbnb "The Console" project consists of creating a Python program that serv
 
 The command line interface is entirely created to manage and query entities related to Airbnb, including users, states, cities, facilities, locations and reviews.
 
-
+Created on week : Monday 30 october to Friday 3 November 2023.
 
 ### WHERE IS THE AIRBNB CLONE ?
 
@@ -59,7 +59,33 @@ echo "python3 -m unittest discover tests" | bash (for unittest)
 
 _Unittest :_
 
+class TestBaseModel(unittest.TestCase):
+    def test_instance_creation(self):
+        model = BaseModel()
+        self.assertTrue(isinstance(model, BaseModel))
+        self.assertTrue(hasattr(model, 'id'))
+        self.assertTrue(hasattr(model, 'created_at'))
+        self.assertTrue(hasattr(model, 'updated_at'))
 
+    def test_instance_with_args(self):
+        data = {
+            'id': 'test_id',
+            'created_at': '2023-11-01T12:00:00',
+            'updated_at': '2023-11-01T12:30:00'
+        }
+        model = BaseModel(**data)
+        self.assertEqual(model.id, 'test_id')
+        self.assertEqual(model.created_at, datetime.fromisoformat
+                         ('2023-11-01T12:00:00'))
+        self.assertEqual(model.updated_at, datetime.fromisoformat
+                         ('2023-11-01T12:30:00'))
+
+    def test_str_representation(self):
+        model = BaseModel()
+        self.assertIn('BaseModel', str(model))
+        self.assertIn(model.id, str(model))
+
+...
 
 ### AUTHORS
 Solomon William
