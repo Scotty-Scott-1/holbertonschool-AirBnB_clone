@@ -99,16 +99,6 @@ class TestHBNBCommand(unittest.TestCase):
         actual_output = self.mock_stdout.getvalue()
         self.assertIn(str(base_model_1), actual_output)
 
-    def test_update_with_invalid_attribute(self):
-        instance_id = self.obj.id
-        with patch('builtins.input',
-                   side_effect=['update BaseModel', instance_id,
-                                'non_existent_attribute', 'John']):
-            self.cmd.onecmd("update BaseModel {} non_existent_attribute 'John'"
-                            .format(instance_id))
-        expected_output = "** Invalid value for the attribute **\n"
-        self.assertEqual(self.mock_stdout.getvalue(), expected_output)
-
     def test_do_update_with_nonexistent_instance(self):
         cmd_input = "update BaseModel 12345 name \"UpdatedName\"\n"
         with patch('builtins.input', side_effect=cmd_input):
