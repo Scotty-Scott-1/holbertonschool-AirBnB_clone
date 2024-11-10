@@ -89,5 +89,5 @@ class TestBaseModel(unittest.TestCase):
 
 ### AUTHORS
 Solomon William
-
+https://www.linkedin.com/in/solomon-william-b88401a3
 Final-year Cybersecurity student with experience in threat analysis, vulnerability testing. Seeking entry-level roles in SOC analysis to help defend against cyber threats.
