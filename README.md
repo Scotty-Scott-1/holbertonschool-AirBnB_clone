@@ -89,5 +89,5 @@ class TestBaseModel(unittest.TestCase):
 
 ### AUTHORS
 Solomon William
-&
-Nadège Tettelin
+
+Final-year Cybersecurity student with experience in threat analysis, vulnerability testing. Seeking entry-level roles in SOC analysis to help defend against cyber threats.
